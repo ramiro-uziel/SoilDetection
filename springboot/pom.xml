@@ -18,8 +18,7 @@
 		<java.version>11</java.version>
 		<jdbi.version>3.48.0</jdbi.version>
 		<frontend-src-dir>${project.basedir}/frontend</frontend-src-dir>
-		<node.version>v20.11.1</node.version>
-		<npm.version>10.2.4</npm.version>
+		<bun.version>v1.2.12</bun.version>
 	</properties>
 	<dependencies>
 		<!-- Spring Boot -->
@@ -78,94 +77,45 @@
 			</exclusions>
 		</dependency>
 
-		<!-- Kubernetes -->
-		<dependency>
-			<groupId>io.kubernetes</groupId>
-			<artifactId>client-java</artifactId>
-			<version>23.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>io.kubernetes</groupId>
-			<artifactId>client-java-extended</artifactId>
-			<version>23.0.0</version>
-		</dependency>
-
 		<!-- Utils -->
 		<dependency>
 			<groupId>io.github.cdimascio</groupId>
 			<artifactId>dotenv-java</artifactId>
 			<version>3.2.0</version>
 		</dependency>
-
-		<!-- JWT -->
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-api</artifactId>
-			<version>0.12.6</version>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-impl</artifactId>
-			<version>0.12.6</version>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-jackson</artifactId>
-			<version>0.12.6</version>
-		</dependency>
-
-		<!-- Test -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.telegram</groupId>
-			<artifactId>telegrambots</artifactId>
-			<version>6.5.0</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
-			<!-- Frontend Builder with Node.js -->
+			<!-- Builder de Frontend con Bun -->
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
 				<version>1.15.0</version>
 				<configuration>
+					<bunVersion>${bun.version}</bunVersion>
 					<workingDirectory>${frontend-src-dir}</workingDirectory>
 					<installDirectory>${project.build.directory}</installDirectory>
 				</configuration>
 				<executions>
 					<execution>
-						<id>install-node-and-npm</id>
+						<id>install-bun</id>
 						<goals>
-							<goal>install-node-and-npm</goal>
+							<goal>install-bun</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>bun install</id>
+						<goals>
+							<goal>bun</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>${node.version}</nodeVersion>
-							<!-- <npmVersion>${npm.version}</npmVersion> -->
+							<arguments>install</arguments>
 						</configuration>
 					</execution>
 					<execution>
-						<id>npm-install</id>
+						<id>bun run build</id>
 						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-							<arguments>install --legacy-peer-deps</arguments>
-						</configuration>
-					</execution>
-					<execution>
-						<id>npm-run-build</id>
-						<goals>
-							<goal>npm</goal>
+							<goal>bun</goal>
 						</goals>
 						<configuration>
 							<arguments>run build</arguments>
@@ -188,7 +138,7 @@
 							<outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${frontend-src-dir}/build/client</directory>
+									<directory>${frontend-src-dir}/dist</directory>
 									<filtering>false</filtering>
 								</resource>
 							</resources>

@@ -23,12 +23,9 @@ public class WebSecurityConfig {
                                                                 "/manifest.json",
                                                                 "/assets/**",
                                                                 "/static/**",
-                                                                "/",
                                                                 "/error")
                                                 .permitAll()
-                                                .antMatchers("/api/auth/**").permitAll()
-                                                .antMatchers("/api", "/api/healthcheck", "/api/debug").permitAll()
-                                                .antMatchers("/api/**").authenticated()
+                                                .antMatchers("/api/**").permitAll()
                                                 .anyRequest().permitAll());
 
                 return http.build();

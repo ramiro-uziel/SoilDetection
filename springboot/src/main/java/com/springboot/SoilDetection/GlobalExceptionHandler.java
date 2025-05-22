@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,11 +19,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
+    public ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request,
+            HttpServletRequest httpRequest) {
         logger.error("Unhandled exception occurred", ex);
 
         Map<String, Object> body = new HashMap<>();
-        body.put("message", "An unexpected error occurred");
+        body.put("message", "An unexpected error occurred at endpoint: " + httpRequest.getRequestURI());
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
 
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
