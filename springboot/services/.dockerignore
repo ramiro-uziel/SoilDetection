@@ -1,0 +1,10 @@
+.git
+.gitignore
+**/node_modules
+**/.settings
+**/.project
+**/.classpath
+**/.factorypath
+**/build
+**/.DS_Store
+**/.idea
